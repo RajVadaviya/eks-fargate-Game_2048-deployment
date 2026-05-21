@@ -370,7 +370,7 @@ eksctl delete cluster \
 
 Project inspired from:
 
-:contentReference[oaicite:0]{index=0}
+[:contentReference[oaicite:0]{index=0}](https://www.youtube.com/watch?v=RRCrY12VY_s&list=PLdpzxOOAlwvJdsW6A0jCz_3VaANuFMLpc&index=18)
 
 ---
 
