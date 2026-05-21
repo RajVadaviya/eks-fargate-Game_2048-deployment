@@ -1,0 +1,178 @@
+# ================================
+# Namespace Configuration
+# ================================
+
+# apiVersion defines which Kubernetes API version is used
+apiVersion: v1
+
+# kind specifies the type of Kubernetes resource
+kind: Namespace
+
+# metadata contains information about the resource
+metadata:
+
+  # name defines namespace name
+  name: game-2048
+
+---
+
+# ================================
+# Deployment Configuration
+# ================================
+
+# apps/v1 is used for Deployment resources
+apiVersion: apps/v1
+
+# Defines Kubernetes Deployment object
+kind: Deployment
+
+metadata:
+
+  # Deployment will be created inside game-2048 namespace
+  namespace: game-2048
+
+  # Name of deployment
+  name: deployment-2048
+
+spec:
+
+  # replicas defines how many pod copies Kubernetes should maintain
+  replicas: 5
+
+  # selector identifies pods managed by this deployment
+  selector:
+
+    # matchLabels matches pods having label app: 2048
+    matchLabels:
+      app: 2048
+
+  # template defines pod configuration
+  template:
+
+    metadata:
+
+      # labels assigned to pods
+      labels:
+        app: 2048
+
+    spec:
+
+      # containers section defines application containers
+      containers:
+
+      # Container name
+      - name: app-2048
+
+        # Docker image used for application
+        image: public.ecr.aws/l6m2t8p7/docker-2048:latest
+
+        # Port exposed by container
+        ports:
+
+        # Application runs on container port 80
+        - containerPort: 80
+
+---
+
+# ================================
+# Service Configuration
+# ================================
+
+# v1 API used for Service
+apiVersion: v1
+
+# Service resource type
+kind: Service
+
+metadata:
+
+  # Service created inside game-2048 namespace
+  namespace: game-2048
+
+  # Name of service
+  name: service-2048
+
+spec:
+
+  # ports defines networking configuration
+  ports:
+
+   # Service listens on port 80
+   - port: 80
+
+     # Traffic forwarded to container port 80
+     targetPort: 80
+
+     # TCP protocol used
+     protocol: TCP
+
+  # NodePort exposes application externally through node port
+  type: NodePort
+
+  # Service forwards traffic to pods with label app: 2048
+  selector:
+    app: 2048
+
+---
+
+# ================================
+# Ingress Configuration
+# ================================
+
+# networking.k8s.io/v1 API used for ingress
+apiVersion: networking.k8s.io/v1
+
+# Defines ingress resource
+kind: Ingress
+
+metadata:
+
+  # Ingress created inside game-2048 namespace
+  namespace: game-2048
+
+  # Name of ingress
+  name: ingress-2048
+
+  # annotations provide additional instructions
+  annotations:
+
+    # Use AWS Application Load Balancer
+    kubernetes.io/ingress.class: "alb"
+
+    # Creates internet-facing public ALB
+    alb.ingress.kubernetes.io/scheme: internet-facing
+
+    # Routes traffic directly to pod IP addresses
+    # Required for AWS Fargate
+    alb.ingress.kubernetes.io/target-type: ip
+
+spec:
+
+  # rules section defines traffic routing rules
+  rules:
+
+    # HTTP routing rules
+    - http:
+
+        # paths defines URL path routing
+        paths:
+
+          # Root path
+          - path: /
+
+            # Prefix means all traffic starting with /
+            pathType: Prefix
+
+            backend:
+
+              # Forward traffic to Kubernetes Service
+              service:
+
+                # Service name
+                name: service-2048
+
+                # Service port
+                port:
+
+                  # Traffic forwarded to port 80
+                  number: 80
