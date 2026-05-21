@@ -347,33 +347,10 @@ Through this project, I learned:
 
 # Screenshots
 
-## EKS Cluster Creation
-
-(Add Screenshot Here)
-
----
-
-## Running Pods
-
-(Add Screenshot Here)
-
----
-
-## AWS Load Balancer Controller
-
-(Add Screenshot Here)
-
----
-
-## Kubernetes Ingress
-
-(Add Screenshot Here)
-
----
-
 ## 2048 Game Running on Browser
 
-(Add Screenshot Here)
+<img width="1919" height="1030" alt="image" src="https://github.com/user-attachments/assets/3c64497f-3fa2-4530-8c0b-6e353e4712f6" />
+
 
 ---
 
