@@ -176,5 +176,3 @@ spec:
 
                   # Traffic forwarded to port 80
                   number: 80
-
-
